@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using BusinessLogic;
 using BusinessLogic.Services;
 using BusinessLogic.Startup;
 using DoctorPatientAPI.Middlewares;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DoctorPatientAPI
 {
@@ -32,6 +37,51 @@ namespace DoctorPatientAPI
         {
             services.AddCors();
             services.AddControllers();
+            // configure strongly typed settings objects
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var accessTokenSecret = Encoding.ASCII.GetBytes(appSettings.JwtSecret);
+            var refreshTokenSecret = Encoding.ASCII.GetBytes(appSettings.RefreshSecret);
+            services.AddAuthentication()
+                .AddJwtBearer("AccessToken", x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(accessTokenSecret),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                })
+                .AddJwtBearer("RefreshToken", x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(refreshTokenSecret),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            services
+                .AddAuthorization(options =>
+                {
+                    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .AddAuthenticationSchemes("AccessToken", "RefreshToken")
+                        .Build();
+                });
+
             services.AddScoped<IUserService, UserService>();
             DependencySetup.ConfigureServices(services, Configuration);
 
@@ -54,12 +104,15 @@ namespace DoctorPatientAPI
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-
-            app.UseMiddleware<GetRefreshTokenFromCookieMiddleware>();
-            app.UseMiddleware<RefreshTokenMiddleware>();
             app.UseMiddleware<GetJWTFromCookieMiddleware>();
-            // custom jwt auth middleware
-            app.UseMiddleware<JwtAccessTokenMiddleware>();
+            app.UseMiddleware<GetRefreshTokenFromCookieMiddleware>();
+            //app.UseMiddleware<RefreshTokenMiddleware>();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+
+            //// custom jwt auth middleware
+            //app.UseMiddleware<JwtAccessTokenMiddleware>();
 
             app.UseEndpoints(x => x.MapControllers());
 

@@ -73,7 +73,7 @@ namespace BusinessLogic.Services
             var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim(_appSettings.ClaimsName, user.Id.ToString()) }),
+                Subject = new ClaimsIdentity(new Claim[] { new Claim("id", user.Id.ToString()) }),
                 Expires = DateTime.UtcNow.AddMinutes(_appSettings.AccessTokenLifetime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
@@ -87,7 +87,7 @@ namespace BusinessLogic.Services
             var key = Encoding.ASCII.GetBytes(_appSettings.RefreshSecret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim(_appSettings.ClaimsName, user.Id.ToString()) }),
+                Subject = new ClaimsIdentity(new Claim[] { new Claim("id", user.Id.ToString()) }),
                 Expires = DateTime.UtcNow.AddMinutes(_appSettings.RefreshTokenLifetime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
@@ -112,12 +112,12 @@ namespace BusinessLogic.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenS = tokenHandler.ReadJwtToken(refreshToken);
-
-            var userId = Guid.Parse(tokenS.Claims.First(claim => claim.Type == _appSettings.ClaimsName).Value);
+            Console.WriteLine(tokenS.Claims.ToList().Count);
+            var userId = Guid.Parse(tokenS.Claims.First(claim => claim.Type == "id").Value);
 
             var user = await _userRepository.GetById(userId);
 
-            if(user.RefreshToken == null)
+            if (user.RefreshToken == null)
             {
                 throw new NoRefreshTokenException("No refresh token found in DB for this user.");
             }
@@ -129,7 +129,6 @@ namespace BusinessLogic.Services
             }
 
             return GenerateJwtToken(user);
-
 
         }
     }

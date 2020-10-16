@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
-using DoctorPatientAPI.Guards;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DoctorPatientAPI.Controllers
 {

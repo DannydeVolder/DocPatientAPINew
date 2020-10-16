@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BCrypt.Net;
 using BusinessLogic.DTO;
 using BusinessLogic.Services;
-using DoctorPatientAPI.Guards;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,8 +25,7 @@ namespace DoctorPatientAPI.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(AuthenticationAttemptDTO authAttemptDTO)
         {
-
-            if (HttpContext.Items["User"] != null)
+            if (User.Identity.IsAuthenticated)
             {
                 return BadRequest(new { message = "Already logged in." });
             }
@@ -80,7 +80,7 @@ namespace DoctorPatientAPI.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "RefreshToken")]
         [HttpGet("refresh")]
         public async Task<IActionResult> RefreshAccessToken()
         {
@@ -88,6 +88,7 @@ namespace DoctorPatientAPI.Controllers
 
             try
             {
+                Console.WriteLine(User.Claims.ToList()[0]);
                 string refreshedAccessToken = await _authService.RefreshAccessToken(HttpContext.Request.Cookies[refreshCookieName]);
                 HttpContext.Response.Cookies.Append(
                     "ACCESS_TOKEN",
@@ -101,7 +102,7 @@ namespace DoctorPatientAPI.Controllers
 
                 return Ok();
             }
-            catch(Exception ex) {}
+            catch(Exception exception)
             {
                 return BadRequest(new { message = "Something went wrong while refreshing access token." });
             }
