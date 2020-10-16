@@ -22,7 +22,6 @@ namespace DoctorPatientAPI.Controllers
         }
 
 
-        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<PatientDTO>> GetAllAsync()
         {
