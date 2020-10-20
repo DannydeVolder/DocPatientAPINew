@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public interface IPatientRepository : IBaseRepository<Patient>
+    public interface IPatientRepository : IBaseRepository<Patient, Guid>
     {
     }
 }

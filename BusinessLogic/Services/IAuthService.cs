@@ -13,7 +13,7 @@ namespace BusinessLogic.Services
     public interface IAuthService
     {
         Task<UserDTO> Authenticate(AuthenticationAttemptDTO authenticationAttemptDTO);
-        void Register(RegisterAccountDTO registerAccountDTO);
+        Task Register(RegisterAccountDTO registerAccountDTO);
 
         Task<string> RefreshAccessToken(string refreshToken);
 

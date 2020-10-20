@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public interface IBaseRepository<T> where T: BaseEntity
+    public interface IBaseRepository<T, TPrimaryKey> where T: IEntity<TPrimaryKey>
     {
         Task<IEnumerable<T>> GetAll();
-        Task<T> GetById(Guid id);
+        Task<T> GetById(TPrimaryKey id);
         void Insert(T entity);
         void Update(T entity);
-        void Delete(Guid id);
+        void Delete(TPrimaryKey id);
     }
 }

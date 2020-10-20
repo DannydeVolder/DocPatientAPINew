@@ -44,11 +44,16 @@ namespace DoctorPatientAPI
 
 
 
+
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
             var accessTokenSecret = Encoding.ASCII.GetBytes(appSettings.JwtSecret);
             var refreshTokenSecret = Encoding.ASCII.GetBytes(appSettings.RefreshSecret);
-            services.AddAuthentication()
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddJwtBearer("AccessToken", x =>
                 {
                     x.RequireHttpsMetadata = false;

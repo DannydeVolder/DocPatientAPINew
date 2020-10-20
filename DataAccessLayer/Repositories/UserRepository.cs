@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public class UserRepository : BaseRepository<User>, IUserRepository
+    public class UserRepository : BaseRepository<User, Guid>, IUserRepository
     {
 
         public UserRepository(AppDbContext context) : base(context)
@@ -19,7 +19,7 @@ namespace DataAccessLayer.Repositories
 
         public async Task<User> GetByUsername(string username)
         {
-            return await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
+            return await _context.Users.SingleOrDefaultAsync(x => x.UserName == username);
         }
     }
 }

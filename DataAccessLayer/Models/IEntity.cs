@@ -4,9 +4,9 @@ using System.Text;
 
 namespace DataAccessLayer.Models
 {
-    public interface IEntity
+    public interface IEntity<T>
     {
-        public Guid Id { get; set; }
+        public T Id { get; set; }
 
     }
 }

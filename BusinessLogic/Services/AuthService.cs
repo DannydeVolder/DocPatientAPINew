@@ -4,6 +4,7 @@ using BusinessLogic.DTO;
 using BusinessLogic.Exceptions;
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -23,47 +24,58 @@ namespace BusinessLogic.Services
         private readonly AppSettings _appSettings;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public AuthService(IOptions<AppSettings> appSettings, IUserRepository userRepository, IMapper mapper)
+        readonly UserManager<User> _userManager;
+        readonly SignInManager<User> _signInManager;
+        public AuthService(IOptions<AppSettings> appSettings, 
+            IUserRepository userRepository, 
+            IMapper mapper, 
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _appSettings = appSettings.Value;
             _userRepository = userRepository;
             _mapper = mapper;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
         public async Task<UserDTO> Authenticate(AuthenticationAttemptDTO authenticationAttemptDTO)
         {
-            var user = await _userRepository.GetByUsername(authenticationAttemptDTO.Username);
-            if (user != null )
+
+            var user = await _userManager.FindByNameAsync(authenticationAttemptDTO.Username);
+            if (user != null)
             {
-                bool validated = BC.Verify(authenticationAttemptDTO.Password, user.Password);
-                if (validated)
+                var loginResult = await _signInManager.CheckPasswordSignInAsync(user, authenticationAttemptDTO.Password, false);
+
+                if (!loginResult.Succeeded)
                 {
-                    //generate JWT access token
-                    var accessToken = GenerateJwtToken(user);
-                    UserDTO userDTO = _mapper.Map<User, UserDTO>(user);
-                    userDTO.JwtToken = accessToken;
-
-                    //generate refresh token
-                    var refreshToken = GenerateRefreshToken(user);
-
-                    //hash refresh token
-                    const int workFactor = 14;
-                    string hashedRefreshToken = BC.HashPassword(refreshToken, workFactor);
-
-                    //store refresh token in db
-                    user.RefreshToken = hashedRefreshToken;
-                    _userRepository.Update(user);
-
-                    userDTO.RefreshToken = refreshToken;
-
-                    return userDTO;
+                    return null;
                 }
-            }
-            else
-            {
-                return null;
+
+                //generate JWT access token
+                var accessToken = GenerateJwtToken(user);
+                UserDTO userDTO = _mapper.Map<User, UserDTO>(user);
+                userDTO.JwtToken = accessToken;
+
+                //generate refresh token
+                var refreshToken = GenerateRefreshToken(user);
+
+                //hash refresh token
+                const int workFactor = 14;
+                string hashedRefreshToken = BC.HashPassword(refreshToken, workFactor);
+
+                //store refresh token in db
+                user.RefreshToken = hashedRefreshToken;
+                await _userManager.UpdateAsync(user);
+                //_userRepository.Update(user);
+
+                userDTO.RefreshToken = refreshToken;
+
+                return userDTO;
             }
 
             return null;
+            
+
         }
 
         private string GenerateJwtToken(User user)
@@ -95,16 +107,17 @@ namespace BusinessLogic.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public void Register(RegisterAccountDTO registerAccountDTO)
+        public async Task Register(RegisterAccountDTO registerAccountDTO)
         {
-            const int workFactor = 14;
-            string hashedPw = BC.HashPassword(registerAccountDTO.Password, workFactor);
+
+
             User newUser = new Patient();
             newUser.FirstName = registerAccountDTO.FirstName;
             newUser.LastName = registerAccountDTO.LastName;
-            newUser.Username = registerAccountDTO.Username;
-            newUser.Password = hashedPw;
-            _userRepository.Insert(newUser);
+            newUser.UserName = registerAccountDTO.Username;
+
+            var identityResult = await _userManager.CreateAsync(newUser, registerAccountDTO.Password);
+            //_userRepository.Insert(newUser);
 
         }
 

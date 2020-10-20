@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
+    public class BaseRepository<T, TPrimaryKey> : IBaseRepository<T, TPrimaryKey> where T : class, IEntity<TPrimaryKey>
     {
         protected readonly AppDbContext _context;
         private DbSet<T> _entities;
@@ -18,11 +18,11 @@ namespace DataAccessLayer.Repositories
             _entities = context.Set<T>();
         }
 
-        public void Delete(Guid id)
+        public void Delete(TPrimaryKey id)
         {
             if (id == null) throw new ArgumentNullException("entity");
 
-            T entity = _entities.SingleOrDefault(s => s.Id == id);
+            T entity = _entities.SingleOrDefault(s => EqualityComparer<TPrimaryKey>.Default.Equals(s.Id, id));
             _entities.Remove(entity);
             _context.SaveChanges();
         }
@@ -32,9 +32,9 @@ namespace DataAccessLayer.Repositories
             return await _entities.ToListAsync();
         }
 
-        public async Task<T> GetById(Guid id)
+        public async Task<T> GetById(TPrimaryKey id)
         {
-            return await _entities.SingleOrDefaultAsync(s => s.Id == id);
+            return await _entities.SingleOrDefaultAsync(s => EqualityComparer<TPrimaryKey>.Default.Equals(s.Id, id));
         }
 
         public void Insert(T entity)

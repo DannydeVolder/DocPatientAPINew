@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public class PatientRepository : BaseRepository<Patient>, IPatientRepository
+    public class PatientRepository : BaseRepository<Patient, Guid>, IPatientRepository
     {
         public PatientRepository(AppDbContext context) : base(context)
         {

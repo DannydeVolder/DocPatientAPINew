@@ -14,5 +14,9 @@
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Guards\" />
+  </ItemGroup>
+
 
 </Project>

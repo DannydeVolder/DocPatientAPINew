@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using BCrypt.Net;
 using BusinessLogic.DTO;
 using BusinessLogic.Services;
+using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoctorPatientAPI.Controllers
@@ -27,10 +29,6 @@ namespace DoctorPatientAPI.Controllers
         public async Task<IActionResult> Authenticate(AuthenticationAttemptDTO authAttemptDTO)
         {
 
-            if (base.User.Identity.IsAuthenticated)
-            {
-                return BadRequest(new { message = "Already logged in." });
-            }
             var response = await _authService.Authenticate(authAttemptDTO);
 
             if(response == null)
@@ -60,17 +58,19 @@ namespace DoctorPatientAPI.Controllers
                     Secure = true
                 });
 
+            HttpContext.User = response.claimsUserPrincipal;
             return Ok(response);
         }
 
+
         [HttpPost("register")]
-        public IActionResult Register(RegisterAccountDTO registerAccountDTO)
+        public async Task<IActionResult> Register(RegisterAccountDTO registerAccountDTO)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _authService.Register(registerAccountDTO);
+                    await _authService.Register(registerAccountDTO);
                     return Ok();
                 }
                 catch (Exception e)
