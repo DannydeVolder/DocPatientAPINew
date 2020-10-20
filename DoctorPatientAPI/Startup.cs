@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BusinessLogic;
 using BusinessLogic.Services;
 using BusinessLogic.Startup;
+using DoctorPatientAPI.Filters;
 using DoctorPatientAPI.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -40,6 +41,8 @@ namespace DoctorPatientAPI
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+
+
 
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
@@ -81,6 +84,22 @@ namespace DoctorPatientAPI
                         .AddAuthenticationSchemes("AccessToken", "RefreshToken")
                         .Build();
                 });
+
+            // add csrf token
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-XSRF-TOKEN";
+            });
+
+            services.AddTransient<AntiforgeryCookieResultFilterAttribute>();
+
+            services
+                .AddMvc(options =>
+                {
+                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                    options.Filters.AddService<AntiforgeryCookieResultFilterAttribute>();
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddScoped<IUserService, UserService>();
             DependencySetup.ConfigureServices(services, Configuration);

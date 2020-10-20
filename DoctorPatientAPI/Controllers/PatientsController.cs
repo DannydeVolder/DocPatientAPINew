@@ -25,6 +25,7 @@ namespace DoctorPatientAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<PatientDTO>> GetAllAsync()
         {
+            Console.WriteLine(base.User.Identity.IsAuthenticated);
             var patients = await _patientService.ListAsync();
             return patients;
         }

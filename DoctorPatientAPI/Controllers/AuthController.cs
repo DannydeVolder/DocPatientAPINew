@@ -22,10 +22,12 @@ namespace DoctorPatientAPI.Controllers
             _authService = authService;
         }
 
+        [IgnoreAntiforgeryToken]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(AuthenticationAttemptDTO authAttemptDTO)
         {
-            if (User.Identity.IsAuthenticated)
+
+            if (base.User.Identity.IsAuthenticated)
             {
                 return BadRequest(new { message = "Already logged in." });
             }
@@ -37,18 +39,18 @@ namespace DoctorPatientAPI.Controllers
             }
 
             //Generate Access token HTTPonly cookie
-            HttpContext.Response.Cookies.Append(
+            Response.Cookies.Append(
                 "ACCESS_TOKEN",
                 response.JwtToken,
                 new CookieOptions
                 {
-                    Expires = DateTime.Now.AddMinutes(16),
+                    Expires = DateTime.Now.AddMinutes(15),
                     HttpOnly = true,
                     Secure = true
                 });
 
             //Generate Refresh token HTTPonly cookie
-            HttpContext.Response.Cookies.Append(
+            Response.Cookies.Append(
                 "REFRESH_TOKEN",
                 response.RefreshToken,
                 new CookieOptions
@@ -88,9 +90,8 @@ namespace DoctorPatientAPI.Controllers
 
             try
             {
-                Console.WriteLine(User.Claims.ToList()[0]);
                 string refreshedAccessToken = await _authService.RefreshAccessToken(HttpContext.Request.Cookies[refreshCookieName]);
-                HttpContext.Response.Cookies.Append(
+                Response.Cookies.Append(
                     "ACCESS_TOKEN",
                     refreshedAccessToken,
                     new CookieOptions
