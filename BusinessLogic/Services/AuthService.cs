@@ -62,12 +62,12 @@ namespace BusinessLogic.Services
 
 
                 //generate JWT access token
-                var accessToken = GenerateJwtToken(user, userDTO.claimsUserPrincipal.Claims);
+                var accessToken = GenerateJwtToken(userDTO.claimsUserPrincipal.Claims);
 
                 userDTO.JwtToken = accessToken;
 
                 //generate refresh token
-                var refreshToken = GenerateRefreshToken(user, userDTO.claimsUserPrincipal.Claims);
+                var refreshToken = GenerateRefreshToken(userDTO.claimsUserPrincipal.Claims);
 
                 //hash refresh token
                 const int workFactor = 14;
@@ -88,7 +88,7 @@ namespace BusinessLogic.Services
 
         }
 
-        private string GenerateJwtToken(User user, IEnumerable<Claim> claims)
+        private string GenerateJwtToken(IEnumerable<Claim> claims)
         {
             // generate token that is valid for 15 minutes
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -103,7 +103,7 @@ namespace BusinessLogic.Services
             return tokenHandler.WriteToken(token);
         }
 
-        private string GenerateRefreshToken(User user, IEnumerable<Claim> claims)
+        private string GenerateRefreshToken(IEnumerable<Claim> claims)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.RefreshSecret);
@@ -166,7 +166,7 @@ namespace BusinessLogic.Services
             var claimsUserPrincipal = await _principalFactory.CreateAsync(user);
 
 
-            return GenerateJwtToken(user, claimsUserPrincipal.Claims);
+            return GenerateJwtToken(claimsUserPrincipal.Claims);
 
         }
 
