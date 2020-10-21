@@ -43,6 +43,11 @@ namespace DoctorPatientAPI
             services.Configure<AppSettings>(appSettingsSection);
 
 
+            // add csrf token
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-XSRF-TOKEN";
+            });
 
 
             // configure jwt authentication
@@ -90,19 +95,15 @@ namespace DoctorPatientAPI
                         .Build();
                 });
 
-            // add csrf token
-            services.AddAntiforgery(options =>
-            {
-                options.HeaderName = "X-XSRF-TOKEN";
-            });
 
-            services.AddTransient<AntiforgeryCookieResultFilterAttribute>();
+
+            //services.AddTransient<AntiforgeryCookieResultFilterAttribute>();
 
             services
                 .AddMvc(options =>
                 {
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                    options.Filters.AddService<AntiforgeryCookieResultFilterAttribute>();
+                    //options.Filters.AddService<AntiforgeryCookieResultFilterAttribute>();
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
@@ -130,13 +131,11 @@ namespace DoctorPatientAPI
 
             app.UseMiddleware<GetJWTFromCookieMiddleware>();
             app.UseMiddleware<GetRefreshTokenFromCookieMiddleware>();
-            //app.UseMiddleware<RefreshTokenMiddleware>();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
 
-            //// custom jwt auth middleware
-            //app.UseMiddleware<JwtAccessTokenMiddleware>();
 
             app.UseEndpoints(x => x.MapControllers());
 

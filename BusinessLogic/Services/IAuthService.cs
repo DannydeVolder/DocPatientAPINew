@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO;
 using DataAccessLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace BusinessLogic.Services
     public interface IAuthService
     {
         Task<UserDTO> Authenticate(AuthenticationAttemptDTO authenticationAttemptDTO);
-        Task Register(RegisterAccountDTO registerAccountDTO);
+        Task<bool> Register(RegisterAccountDTO registerAccountDTO);
 
         Task<string> RefreshAccessToken(string refreshToken);
 

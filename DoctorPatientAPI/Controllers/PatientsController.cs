@@ -26,6 +26,7 @@ namespace DoctorPatientAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<PatientDTO>> GetAllAsync()
         {
+            Console.WriteLine(HttpContext.User.Claims.ToList()[0]);
             var patients = await _patientService.ListAsync();
             return patients;
         }

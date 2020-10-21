@@ -5,8 +5,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using BCrypt.Net;
 using BusinessLogic.DTO;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Services;
 using DataAccessLayer.Models;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -19,8 +21,11 @@ namespace DoctorPatientAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        protected IAntiforgery _antiforgery;
+
+        public AuthController(IAuthService authService, IAntiforgery antiforgery)
         {
+            _antiforgery = antiforgery;
             _authService = authService;
         }
 
@@ -59,10 +64,21 @@ namespace DoctorPatientAPI.Controllers
                 });
 
             HttpContext.User = response.claimsUserPrincipal;
+
+            var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
+            Response.Cookies.Append(
+                "XSRF-REQUEST-TOKEN",
+                tokens.RequestToken,
+                new CookieOptions()
+                {
+                    HttpOnly = false,
+                    IsEssential = true
+                });
+
             return Ok(response);
         }
 
-
+        [Authorize]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterAccountDTO registerAccountDTO)
         {
@@ -70,10 +86,17 @@ namespace DoctorPatientAPI.Controllers
             {
                 try
                 {
-                    await _authService.Register(registerAccountDTO);
-                    return Ok();
+                    var result = await _authService.Register(registerAccountDTO);
+                    if (result == true)
+                    {
+                        return Ok();
+                    }
                 }
-                catch (Exception e)
+                catch(UserNameTakenException e)
+                {
+                    return BadRequest(new { message = e.Message });
+                }
+                catch (Exception)
                 {
                     return BadRequest(new { message = "Something went wrong." });
                 }
@@ -108,5 +131,7 @@ namespace DoctorPatientAPI.Controllers
                 return BadRequest(new { message = "Something went wrong while refreshing access token." });
             }
         }
+
+
     }
 }
