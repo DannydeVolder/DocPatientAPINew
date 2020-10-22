@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogic.Helpers;
 using BusinessLogic.Services;
 using DataAccessLayer.Contexts;
 using DataAccessLayer.Models;
@@ -31,13 +32,16 @@ namespace BusinessLogic.Startup
 
             builder.AddEntityFrameworkStores<AppDbContext>();
 
-            builder.AddRoleValidator<RoleValidator<ApplicationRole>>();
-            builder.AddRoleManager<RoleManager<ApplicationRole>>();
-
-            builder.AddSignInManager<SignInManager<User>>();
-
+            services.AddScoped<IUserClaimsPrincipalFactory<User>, AppClaimsPrincipalFactory>();
             services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IRoleService, RoleService>();
+
+            builder.AddSignInManager<SignInManager<User>>();
+            builder.AddRoleManager<RoleManager<ApplicationRole>>();
+            builder.AddRoleValidator<RoleValidator<ApplicationRole>>();
+
+
             services.AddAutoMapper(typeof(DependencySetup));
             services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
             DependencySetupDAL.ConfigureServices(services, configuration);

@@ -2,6 +2,7 @@
 using BCrypt.Net;
 using BusinessLogic.DTO;
 using BusinessLogic.Exceptions;
+using BusinessLogic.Helpers;
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -61,6 +62,8 @@ namespace BusinessLogic.Services
                 userDTO.claimsUserPrincipal = await _principalFactory.CreateAsync(user);
 
 
+                Console.WriteLine(userDTO.claimsUserPrincipal.Claims.ToList()[2]);
+
                 //generate JWT access token
                 var accessToken = GenerateJwtToken(userDTO.claimsUserPrincipal.Claims);
 
@@ -75,11 +78,18 @@ namespace BusinessLogic.Services
 
                 //store refresh token in db
                 user.RefreshToken = hashedRefreshToken;
-                await _userManager.UpdateAsync(user);
-                //_userRepository.Update(user);
+                var updateResult = await _userManager.UpdateAsync(user);
+                var roles = await _userManager.GetRolesAsync(user);
 
-                userDTO.RefreshToken = refreshToken;
-                return userDTO;
+                if (updateResult.Succeeded)
+                {
+                    userDTO.Roles = roles;
+                    userDTO.RefreshToken = refreshToken;
+                    return userDTO;
+                }
+
+
+
 
             }
 
@@ -110,7 +120,7 @@ namespace BusinessLogic.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(_appSettings.RefreshTokenLifetime),
+                Expires = DateTime.UtcNow.AddDays(_appSettings.RefreshTokenLifetime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -132,8 +142,9 @@ namespace BusinessLogic.Services
             newUser.UserName = registerAccountDTO.Username;
 
             var identityResult = await _userManager.CreateAsync(newUser, registerAccountDTO.Password);
-
-            if (identityResult.Succeeded)
+            var roleResult = await _userManager.AddToRoleAsync(newUser, Role.Patient);
+           
+            if (identityResult.Succeeded && roleResult.Succeeded)
             {
                 return true;
             }
@@ -146,10 +157,10 @@ namespace BusinessLogic.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenS = tokenHandler.ReadJwtToken(refreshToken);
             Console.WriteLine(tokenS.Claims.ToList().Count);
-            var userId = Guid.Parse(tokenS.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
-            var userName = tokenS.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+            var userName = tokenS.Claims.First(claim => claim.Type == "unique_name").Value;
 
             var user = await _userManager.FindByNameAsync(userName);
+
 
 
             if (user.RefreshToken == null)
@@ -170,5 +181,20 @@ namespace BusinessLogic.Services
 
         }
 
+        public async Task<bool> SignOut(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            Console.WriteLine(user);
+            if (user != null)
+            {
+                user.RefreshToken = null;
+                var updateResult = await _userManager.UpdateAsync(user);
+
+                return updateResult.Succeeded;
+
+            }
+            return false;
+
+        }
     }
 }

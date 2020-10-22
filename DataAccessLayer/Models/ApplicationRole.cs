@@ -7,5 +7,13 @@ namespace DataAccessLayer.Models
 {
     public class ApplicationRole : IdentityRole<Guid>
     {
+
+        public ApplicationRole(string name)
+        {
+            Name = name;
+        }
+
+        public override Guid Id { get; set; }
     }
+
 }

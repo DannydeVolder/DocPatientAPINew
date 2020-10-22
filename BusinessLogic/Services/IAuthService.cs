@@ -18,6 +18,7 @@ namespace BusinessLogic.Services
 
         Task<string> RefreshAccessToken(string refreshToken);
 
+        Task<bool> SignOut(Guid userId);
 
     }
 }

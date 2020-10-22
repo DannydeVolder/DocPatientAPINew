@@ -22,9 +22,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DoctorPatientAPI
 {
+
+
     public class Startup
     {
-
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
@@ -36,7 +38,17 @@ namespace DoctorPatientAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:8081")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod()
+                                        .AllowCredentials();
+                                  });
+            });
             services.AddControllers();
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -97,13 +109,10 @@ namespace DoctorPatientAPI
 
 
 
-            //services.AddTransient<AntiforgeryCookieResultFilterAttribute>();
-
             services
                 .AddMvc(options =>
                 {
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                    //options.Filters.AddService<AntiforgeryCookieResultFilterAttribute>();
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
@@ -124,10 +133,7 @@ namespace DoctorPatientAPI
 
             app.UseHttpsRedirection();
 
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseMiddleware<GetJWTFromCookieMiddleware>();
             app.UseMiddleware<GetRefreshTokenFromCookieMiddleware>();

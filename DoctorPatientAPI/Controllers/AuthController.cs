@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BCrypt.Net;
 using BusinessLogic.DTO;
 using BusinessLogic.Exceptions;
+using BusinessLogic.Helpers;
 using BusinessLogic.Services;
 using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoctorPatientAPI.Controllers
 {
+    [Authorize(AuthenticationSchemes = "AccessToken")]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -29,6 +33,7 @@ namespace DoctorPatientAPI.Controllers
             _authService = authService;
         }
 
+        [AllowAnonymous]
         [IgnoreAntiforgeryToken]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(AuthenticationAttemptDTO authAttemptDTO)
@@ -49,7 +54,7 @@ namespace DoctorPatientAPI.Controllers
                 {
                     Expires = DateTime.Now.AddMinutes(15),
                     HttpOnly = true,
-                    Secure = true
+                    IsEssential = true
                 });
 
             //Generate Refresh token HTTPonly cookie
@@ -60,7 +65,7 @@ namespace DoctorPatientAPI.Controllers
                 {
                     Expires = DateTime.Now.AddDays(3),
                     HttpOnly = true,
-                    Secure = true
+                    IsEssential = true
                 });
 
             HttpContext.User = response.claimsUserPrincipal;
@@ -78,7 +83,34 @@ namespace DoctorPatientAPI.Controllers
             return Ok(response);
         }
 
-        [Authorize]
+
+        [AllowAnonymous]
+        [HttpPost("signout")]
+        public async Task<IActionResult> SignOut([Required]Guid userId)
+        {
+            Console.WriteLine("Hello");
+            Console.WriteLine(userId);
+            if (ModelState.IsValid)
+            {
+                var signedOut = await _authService.SignOut(userId);
+
+                if (signedOut)
+                {
+                    Response.Cookies.Delete("ACCESS_TOKEN");
+                    Response.Cookies.Delete("REFRESH_TOKEN");
+                    Response.Cookies.Delete("XSRF-REQUEST-TOKEN");
+                    return Ok();
+                }
+
+                else
+                {
+                    return BadRequest(new { message = "Something went wrong." });
+                }
+            }
+            return BadRequest(ModelState);
+        }
+
+        [IgnoreAntiforgeryToken]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterAccountDTO registerAccountDTO)
         {
