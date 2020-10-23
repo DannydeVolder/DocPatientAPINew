@@ -137,6 +137,58 @@ namespace DoctorPatientAPI.Controllers
 
         }
 
+        [HttpPost("registeradmin")]
+        public async Task<IActionResult> RegisterAdmin(RegisterAccountDTO registerAccountDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var result = await _authService.RegisterAdmin(registerAccountDTO);
+                    if (result == true)
+                    {
+                        return Ok();
+                    }
+                }
+                catch (UserNameTakenException e)
+                {
+                    return BadRequest(new { message = e.Message });
+                }
+                catch (Exception)
+                {
+                    return BadRequest(new { message = "Something went wrong." });
+                }
+            }
+            return BadRequest(new { message = "Something went wrong." });
+        }
+
+
+        [HttpPost("registerdoctor")]
+        public async Task<IActionResult> RegisterDoctor(RegisterAccountDTO registerAccountDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var result = await _authService.RegisterDoctor(registerAccountDTO);
+                    if (result == true)
+                    {
+                        return Ok();
+                    }
+                }
+                catch (UserNameTakenException e)
+                {
+                    return BadRequest(new { message = e.Message });
+                }
+                catch (Exception)
+                {
+                    return BadRequest(new { message = "Something went wrong." });
+                }
+            }
+            return BadRequest(new { message = "Something went wrong." });
+        }
+
+
         [Authorize(AuthenticationSchemes = "RefreshToken")]
         [HttpGet("refresh")]
         public async Task<IActionResult> RefreshAccessToken()

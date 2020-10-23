@@ -15,6 +15,8 @@ namespace BusinessLogic.Services
     {
         Task<UserDTO> Authenticate(AuthenticationAttemptDTO authenticationAttemptDTO);
         Task<bool> Register(RegisterAccountDTO registerAccountDTO);
+        Task<bool> RegisterDoctor(RegisterAccountDTO registerAccountDTO);
+        Task<bool> RegisterAdmin(RegisterAccountDTO registerAccountDTO);
 
         Task<string> RefreshAccessToken(string refreshToken);
 

@@ -196,5 +196,51 @@ namespace BusinessLogic.Services
             return false;
 
         }
+
+        public async Task<bool> RegisterDoctor(RegisterAccountDTO registerAccountDTO)
+        {
+            var user = await _userManager.FindByNameAsync(registerAccountDTO.Username);
+
+            if (user != null)
+            {
+                throw new UserNameTakenException("This username is already taken.");
+            }
+            User newUser = new Patient();
+            newUser.FirstName = registerAccountDTO.FirstName;
+            newUser.LastName = registerAccountDTO.LastName;
+            newUser.UserName = registerAccountDTO.Username;
+
+            var identityResult = await _userManager.CreateAsync(newUser, registerAccountDTO.Password);
+            var roleResult = await _userManager.AddToRoleAsync(newUser, Role.Doctor);
+
+            if (identityResult.Succeeded && roleResult.Succeeded)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> RegisterAdmin(RegisterAccountDTO registerAccountDTO)
+        {
+            var user = await _userManager.FindByNameAsync(registerAccountDTO.Username);
+
+            if (user != null)
+            {
+                throw new UserNameTakenException("This username is already taken.");
+            }
+            User newUser = new Patient();
+            newUser.FirstName = registerAccountDTO.FirstName;
+            newUser.LastName = registerAccountDTO.LastName;
+            newUser.UserName = registerAccountDTO.Username;
+
+            var identityResult = await _userManager.CreateAsync(newUser, registerAccountDTO.Password);
+            var roleResult = await _userManager.AddToRoleAsync(newUser, Role.Admin);
+
+            if (identityResult.Succeeded && roleResult.Succeeded)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
