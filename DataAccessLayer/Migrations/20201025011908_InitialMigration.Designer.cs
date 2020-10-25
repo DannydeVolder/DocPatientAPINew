@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201020182837_identityrole")]
-    partial class identityrole
+    [Migration("20201025011908_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,6 +49,68 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Models.Diagnosis", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DiagnosisInformation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DiagnosisName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("MedicalFileID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicalFileID");
+
+                    b.ToTable("Diagnosis");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.MedicalFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId")
+                        .IsUnique()
+                        .HasFilter("[PatientId] IS NOT NULL");
+
+                    b.ToTable("MedicalFiles");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.Medicine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Dosage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("MedicalFileID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MedicineName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicalFileID");
+
+                    b.ToTable("Medicine");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -61,6 +123,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -242,15 +307,35 @@ namespace DataAccessLayer.Migrations
                 {
                     b.HasBaseType("DataAccessLayer.Models.User");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid?>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasIndex("DoctorId");
 
                     b.HasDiscriminator().HasValue("Patient");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.Diagnosis", b =>
+                {
+                    b.HasOne("DataAccessLayer.Models.MedicalFile", "MedicalFile")
+                        .WithMany("Diagnosis")
+                        .HasForeignKey("MedicalFileID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.MedicalFile", b =>
+                {
+                    b.HasOne("DataAccessLayer.Models.Patient", "Patient")
+                        .WithOne("MedicalFile")
+                        .HasForeignKey("DataAccessLayer.Models.MedicalFile", "PatientId");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.Medicine", b =>
+                {
+                    b.HasOne("DataAccessLayer.Models.MedicalFile", "MedicalFile")
+                        .WithMany("Medicine")
+                        .HasForeignKey("MedicalFileID")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

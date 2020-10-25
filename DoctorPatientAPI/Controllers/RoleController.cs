@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DoctorPatientAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = "AccessToken", Roles = Role.Doctor)]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase
@@ -24,6 +23,7 @@ namespace DoctorPatientAPI.Controllers
             _roleService = roleService;
         }
 
+        [IgnoreAntiforgeryToken]
         [HttpPost("create")]
         public async Task<IActionResult> Create([Required] string roleName)
         {

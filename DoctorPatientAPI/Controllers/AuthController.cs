@@ -139,7 +139,7 @@ namespace DoctorPatientAPI.Controllers
 
         }
 
-        [Authorize(AuthenticationSchemes = "AccessToken", Roles = Role.Admin)]
+        [Authorize(AuthenticationSchemes = "AccessToken"]
         [HttpPost("registerdoctor")]
         public async Task<IActionResult> RegisterDoctor(RegisterAccountDTO registerAccountDTO)
         {

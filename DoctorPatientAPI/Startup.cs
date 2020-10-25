@@ -47,7 +47,7 @@ namespace DoctorPatientAPI
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:8081")
+                                      builder.WithOrigins("https://10.10.2.149")
                                         .AllowAnyHeader()
                                         .AllowAnyMethod()
                                         .AllowCredentials();
