@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using BusinessLogic.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace DoctorPatientAPI.Controllers
 {
@@ -27,9 +28,17 @@ namespace DoctorPatientAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<PatientDTO>> GetAllAsync()
         {
-            Console.Write(HttpContext.User.Claims.ToList()[3]);
             var patients = await _patientService.ListAsync();
             return patients;
         }
+
+        [Authorize(AuthenticationSchemes = "AccessToken", Roles = Role.Doctor + "," + Role.Patient)]
+        [HttpGet("getbyid")]
+        public async Task<PatientDTO> GetPatient([Required]Guid patientId)
+        {
+            var patient = await _patientService.GetPatient(patientId);
+            return patient;
+        }
+
     }
 }

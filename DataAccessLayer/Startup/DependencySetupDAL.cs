@@ -21,6 +21,7 @@ namespace DataAccessLayer.Startup
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Database")));
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IMedicalFileRepository, MedicalFileRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
             
 

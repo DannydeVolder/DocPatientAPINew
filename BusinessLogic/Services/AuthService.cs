@@ -28,14 +28,15 @@ namespace BusinessLogic.Services
         readonly UserManager<User> _userManager;
         readonly SignInManager<User> _signInManager;
         private readonly IUserClaimsPrincipalFactory<User> _principalFactory;
-
+        private readonly IMedicalFileRepository _medicalFileRepository;
 
         public AuthService(IOptions<AppSettings> appSettings, 
             IUserRepository userRepository, 
             IMapper mapper, 
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IUserClaimsPrincipalFactory<User> principalFactory)
+            IUserClaimsPrincipalFactory<User> principalFactory,
+            IMedicalFileRepository medicalFileRepository)
         {
             _appSettings = appSettings.Value;
             _userRepository = userRepository;
@@ -43,6 +44,7 @@ namespace BusinessLogic.Services
             _signInManager = signInManager;
             _userManager = userManager;
             _principalFactory = principalFactory;
+            _medicalFileRepository = medicalFileRepository;
         }
         public async Task<UserDTO> Authenticate(AuthenticationAttemptDTO authenticationAttemptDTO)
         {
@@ -136,14 +138,18 @@ namespace BusinessLogic.Services
             {
                 throw new UserNameTakenException("This username is already taken.");
             }
-            User newUser = new Patient();
+            Patient newUser = new Patient();
             newUser.FirstName = registerAccountDTO.FirstName;
             newUser.LastName = registerAccountDTO.LastName;
             newUser.UserName = registerAccountDTO.Username;
+            newUser.DateOfBirth = registerAccountDTO.DateOfBirth;
 
             var identityResult = await _userManager.CreateAsync(newUser, registerAccountDTO.Password);
             var roleResult = await _userManager.AddToRoleAsync(newUser, Role.Patient);
-           
+            MedicalFile medicalFile = new MedicalFile();
+            medicalFile.Patient = newUser;
+            await _medicalFileRepository.Insert(medicalFile);
+
             if (identityResult.Succeeded && roleResult.Succeeded)
             {
                 return true;
@@ -152,7 +158,7 @@ namespace BusinessLogic.Services
 
         }
 
-        public async Task<string> RefreshAccessToken(string refreshToken)
+        public async Task<UserDTO> RefreshAccessToken(string refreshToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenS = tokenHandler.ReadJwtToken(refreshToken);
@@ -176,8 +182,12 @@ namespace BusinessLogic.Services
 
             var claimsUserPrincipal = await _principalFactory.CreateAsync(user);
 
+            UserDTO userDTO = _mapper.Map<User, UserDTO>(user);
+            userDTO.JwtToken = GenerateJwtToken(claimsUserPrincipal.Claims);
+            var roles = await _userManager.GetRolesAsync(user);
+            userDTO.Roles = roles;
 
-            return GenerateJwtToken(claimsUserPrincipal.Claims);
+            return userDTO;
 
         }
 
@@ -205,14 +215,14 @@ namespace BusinessLogic.Services
             {
                 throw new UserNameTakenException("This username is already taken.");
             }
-            User newUser = new Patient();
+            User newUser = new Doctor();
             newUser.FirstName = registerAccountDTO.FirstName;
             newUser.LastName = registerAccountDTO.LastName;
             newUser.UserName = registerAccountDTO.Username;
+            newUser.DateOfBirth = registerAccountDTO.DateOfBirth;
 
             var identityResult = await _userManager.CreateAsync(newUser, registerAccountDTO.Password);
             var roleResult = await _userManager.AddToRoleAsync(newUser, Role.Doctor);
-
             if (identityResult.Succeeded && roleResult.Succeeded)
             {
                 return true;

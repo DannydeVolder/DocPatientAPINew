@@ -10,7 +10,7 @@ namespace DataAccessLayer.Repositories
     {
         Task<IEnumerable<T>> GetAll();
         Task<T> GetById(TPrimaryKey id);
-        void Insert(T entity);
+        Task<int> Insert(T entity);
         void Update(T entity);
         void Delete(TPrimaryKey id);
     }

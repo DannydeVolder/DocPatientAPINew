@@ -22,6 +22,7 @@ namespace BusinessLogic.Startup
                 {
                     opt.Password.RequireDigit = true;
                     opt.Password.RequiredLength = 8;
+                    opt.Password.RequiredUniqueChars = 1;
                     opt.Password.RequireNonAlphanumeric = false;
                     opt.Password.RequireUppercase = true;
                     opt.Password.RequireLowercase = true;
@@ -34,8 +35,10 @@ namespace BusinessLogic.Startup
 
             services.AddScoped<IUserClaimsPrincipalFactory<User>, AppClaimsPrincipalFactory>();
             services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<IMedicalFileService, MedicalFileService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRoleService, RoleService>();
+
 
             builder.AddSignInManager<SignInManager<User>>();
             builder.AddRoleManager<RoleManager<ApplicationRole>>();

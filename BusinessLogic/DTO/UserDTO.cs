@@ -15,6 +15,8 @@ namespace BusinessLogic.DTO
         public string Username { get; set; }
         public IList<string> Roles { get; set; }
 
+        public DateTime DateOfBirth { get; set; }
+
         [JsonIgnore]
         public string JwtToken { get; set; }
 

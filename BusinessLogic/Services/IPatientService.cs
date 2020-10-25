@@ -12,5 +12,7 @@ namespace BusinessLogic.Services
 
         Task<IEnumerable<PatientDTO>> ListAsync();
 
+        Task<PatientDTO> GetPatient(Guid patientId);
+
     }
 }

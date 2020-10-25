@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
 using BusinessLogic;
 using BusinessLogic.Services;
 using BusinessLogic.Startup;
@@ -38,6 +39,9 @@ namespace DoctorPatientAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
+
             services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -116,6 +120,18 @@ namespace DoctorPatientAPI
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
+            services.AddOptions();
+            services.AddMemoryCache();
+            services.Configure<IpRateLimitOptions>
+            (Configuration.GetSection("IpRateLimit"));
+            services.AddSingleton<IIpPolicyStore,
+            MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore,
+            MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IRateLimitConfiguration,
+            RateLimitConfiguration>();
+            services.AddHttpContextAccessor();
+
             services.AddScoped<IUserService, UserService>();
             DependencySetup.ConfigureServices(services, Configuration);
 
@@ -129,6 +145,7 @@ namespace DoctorPatientAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            
 
 
             app.UseHttpsRedirection();
@@ -140,8 +157,9 @@ namespace DoctorPatientAPI
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-
+            app.UseMiddleware<GetUserByIdProtectionMiddleware>();
+            app.UseMiddleware<GetMedicalFileProtectionMiddleware>();
+            app.UseIpRateLimiting();
 
             app.UseEndpoints(x => x.MapControllers());
 

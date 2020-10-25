@@ -21,6 +21,13 @@ namespace BusinessLogic.Services
             _mapper = mapper;
         }
 
+        public async Task<PatientDTO> GetPatient(Guid patientId)
+        {
+            var patient = await _patientRepository.GetById(patientId);
+            var patientDTO = _mapper.Map<User, PatientDTO>(patient);
+            return patientDTO;
+        }
+
         public async Task<IEnumerable<PatientDTO>> ListAsync()
         {
             var patients = await _patientRepository.GetAll();

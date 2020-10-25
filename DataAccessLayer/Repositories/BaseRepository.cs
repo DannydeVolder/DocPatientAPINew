@@ -21,8 +21,7 @@ namespace DataAccessLayer.Repositories
         public void Delete(TPrimaryKey id)
         {
             if (id == null) throw new ArgumentNullException("entity");
-
-            T entity = _entities.SingleOrDefault(s => EqualityComparer<TPrimaryKey>.Default.Equals(s.Id, id));
+            T entity = _entities.SingleOrDefault(s => Equals(s.Id, id));
             _entities.Remove(entity);
             _context.SaveChanges();
         }
@@ -34,15 +33,15 @@ namespace DataAccessLayer.Repositories
 
         public async Task<T> GetById(TPrimaryKey id)
         {
-            return await _entities.SingleOrDefaultAsync(s => EqualityComparer<TPrimaryKey>.Default.Equals(s.Id, id));
+            return await _entities.SingleOrDefaultAsync(s => Equals(s.Id, id));
         }
 
-        public void Insert(T entity)
+        public async Task<int> Insert(T entity)
         {
             if (entity == null) throw new ArgumentNullException("entity");
 
             _entities.Add(entity);
-            _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
 
         public void Update(T entity)

@@ -85,6 +85,7 @@ namespace DoctorPatientAPI.Controllers
 
 
         [AllowAnonymous]
+        [IgnoreAntiforgeryToken]
         [HttpPost("signout")]
         public async Task<IActionResult> SignOut([Required]Guid userId)
         {
@@ -110,6 +111,7 @@ namespace DoctorPatientAPI.Controllers
             return BadRequest(ModelState);
         }
 
+        [AllowAnonymous]
         [IgnoreAntiforgeryToken]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterAccountDTO registerAccountDTO)
@@ -172,18 +174,17 @@ namespace DoctorPatientAPI.Controllers
 
             try
             {
-                string refreshedAccessToken = await _authService.RefreshAccessToken(HttpContext.Request.Cookies[refreshCookieName]);
+                var user = await _authService.RefreshAccessToken(HttpContext.Request.Cookies[refreshCookieName]);
                 Response.Cookies.Append(
                     "ACCESS_TOKEN",
-                    refreshedAccessToken,
+                    user.JwtToken,
                     new CookieOptions
                     {
                         Expires = DateTime.Now.AddMinutes(16),
                         HttpOnly = true,
-                        Secure = true
                     });
 
-                return Ok();
+                return Ok(user);
             }
             catch(Exception exception)
             {
