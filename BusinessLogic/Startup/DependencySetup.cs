@@ -30,7 +30,7 @@ namespace BusinessLogic.Startup
             );
 
             builder = new IdentityBuilder(builder.UserType, typeof(ApplicationRole), builder.Services);
-
+            builder.AddDefaultTokenProviders();
             builder.AddEntityFrameworkStores<AppDbContext>();
 
             services.AddScoped<IUserClaimsPrincipalFactory<User>, AppClaimsPrincipalFactory>();

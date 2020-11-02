@@ -5,6 +5,7 @@ using BusinessLogic.Exceptions;
 using BusinessLogic.Helpers;
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -25,8 +26,8 @@ namespace BusinessLogic.Services
         private readonly AppSettings _appSettings;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        readonly UserManager<User> _userManager;
-        readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IUserClaimsPrincipalFactory<User> _principalFactory;
         private readonly IMedicalFileRepository _medicalFileRepository;
 
@@ -52,19 +53,26 @@ namespace BusinessLogic.Services
             var user = await _userManager.FindByNameAsync(authenticationAttemptDTO.Username);
             if (user != null)
             {
-                var loginResult = await _signInManager.CheckPasswordSignInAsync(user, authenticationAttemptDTO.Password, false);
-
+                
+                var loginResult = await _signInManager.CheckPasswordSignInAsync(user, authenticationAttemptDTO.Password, true);
                 if (!loginResult.Succeeded)
                 {
                     return null;
                 }
 
+
+
                 UserDTO userDTO = _mapper.Map<User, UserDTO>(user);
 
                 userDTO.claimsUserPrincipal = await _principalFactory.CreateAsync(user);
-
-
-                Console.WriteLine(userDTO.claimsUserPrincipal.Claims.ToList()[2]);
+                var identity = new ClaimsIdentity(userDTO.claimsUserPrincipal.Claims);
+                var key = await _userManager.GenerateTwoFactorTokenAsync(user, "Default");
+                //await _signInManager.PasswordSignInAsync(user.UserName, authenticationAttemptDTO.Password, true, false);
+                //var result = await _userManager.GenerateTwoFactorTokenAsync(user, "2fa");
+                Console.WriteLine(key);
+                var result2 = await _userManager.ResetAuthenticatorKeyAsync(user);
+                var result = await _userManager.VerifyTwoFactorTokenAsync(user, "Default", key);
+                Console.WriteLine(result);
 
                 //generate JWT access token
                 var accessToken = GenerateJwtToken(userDTO.claimsUserPrincipal.Claims);

@@ -64,6 +64,7 @@ namespace DoctorPatientAPI.Controllers
                 new CookieOptions
                 {
                     Expires = DateTime.Now.AddDays(3),
+                    Secure = true,
                     HttpOnly = true,
                     IsEssential = true
                 });
