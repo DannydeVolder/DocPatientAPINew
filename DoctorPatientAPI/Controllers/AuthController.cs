@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DoctorPatientAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = "AccessToken")]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -38,50 +37,70 @@ namespace DoctorPatientAPI.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(AuthenticationAttemptDTO authAttemptDTO)
         {
-
-            var response = await _authService.Authenticate(authAttemptDTO);
-
-            if(response == null)
+            if (ModelState.IsValid)
             {
-                return BadRequest(new { message = "Username or password is incorrect." });
+                try
+                {
+                    var response = await _authService.Authenticate(authAttemptDTO);
+
+
+                    //Generate Access token HTTPonly cookie
+                    Response.Cookies.Append(
+                        "ACCESS_TOKEN",
+                        response.JwtToken,
+                        new CookieOptions
+                        {
+                            Expires = DateTime.Now.AddMinutes(15),
+                            HttpOnly = true,
+                            IsEssential = true
+                        });
+
+                    //Generate Refresh token HTTPonly cookie
+                    Response.Cookies.Append(
+                        "REFRESH_TOKEN",
+                        response.RefreshToken,
+                        new CookieOptions
+                        {
+                            Expires = DateTime.Now.AddDays(3),
+                            HttpOnly = true,
+                            IsEssential = true
+                        });
+
+                    HttpContext.User = response.claimsUserPrincipal;
+
+                    var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
+                    Response.Cookies.Append(
+                        "XSRF-REQUEST-TOKEN",
+                        tokens.RequestToken,
+                        new CookieOptions()
+                        {
+                            HttpOnly = false,
+                            IsEssential = true
+                        });
+
+                    var result = new ResultDTO();
+                    result.Status = Status.Success;
+                    result.Message = "Successfully authenticated.";
+                    result.Data = response;
+                    return Ok(result);
+                }
+                catch (TwoFactorEnabledException ex)
+                {
+                    var result = new ResultDTO();
+                    result.Status = Status.Error;
+                    result.Message = "Two factor authentication is enabled, please provide your 2fa code.";
+                    return Ok(result);
+                }
+                catch(UsernameOrPasswordIncorrectException ex)
+                {
+                    return BadRequest(new { message = "Username or password is incorrect." });
+                }
+                catch(Exception ex)
+                {
+                    return BadRequest(new { message = "Something went wrong." });
+                }
             }
-
-            //Generate Access token HTTPonly cookie
-            Response.Cookies.Append(
-                "ACCESS_TOKEN",
-                response.JwtToken,
-                new CookieOptions
-                {
-                    Expires = DateTime.Now.AddMinutes(15),
-                    HttpOnly = true,
-                    IsEssential = true
-                });
-
-            //Generate Refresh token HTTPonly cookie
-            Response.Cookies.Append(
-                "REFRESH_TOKEN",
-                response.RefreshToken,
-                new CookieOptions
-                {
-                    Expires = DateTime.Now.AddDays(3),
-                    Secure = true,
-                    HttpOnly = true,
-                    IsEssential = true
-                });
-
-            HttpContext.User = response.claimsUserPrincipal;
-
-            var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
-            Response.Cookies.Append(
-                "XSRF-REQUEST-TOKEN",
-                tokens.RequestToken,
-                new CookieOptions()
-                {
-                    HttpOnly = false,
-                    IsEssential = true
-                });
-
-            return Ok(response);
+            return BadRequest(ModelState);
         }
 
 

@@ -24,7 +24,6 @@ namespace BusinessLogic.Services
     {
 
         private readonly AppSettings _appSettings;
-        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -32,7 +31,6 @@ namespace BusinessLogic.Services
         private readonly IMedicalFileRepository _medicalFileRepository;
 
         public AuthService(IOptions<AppSettings> appSettings, 
-            IUserRepository userRepository, 
             IMapper mapper, 
             UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -40,7 +38,6 @@ namespace BusinessLogic.Services
             IMedicalFileRepository medicalFileRepository)
         {
             _appSettings = appSettings.Value;
-            _userRepository = userRepository;
             _mapper = mapper;
             _signInManager = signInManager;
             _userManager = userManager;
@@ -51,61 +48,73 @@ namespace BusinessLogic.Services
         {
 
             var user = await _userManager.FindByNameAsync(authenticationAttemptDTO.Username);
+
             if (user != null)
             {
-                
-                var loginResult = await _signInManager.CheckPasswordSignInAsync(user, authenticationAttemptDTO.Password, true);
+
+
+                var loginResult = await _signInManager.CheckPasswordSignInAsync(user, authenticationAttemptDTO.Password, false);
                 if (!loginResult.Succeeded)
                 {
-                    return null;
+                    throw new UsernameOrPasswordIncorrectException();
                 }
 
-
-
-                UserDTO userDTO = _mapper.Map<User, UserDTO>(user);
-
-                userDTO.claimsUserPrincipal = await _principalFactory.CreateAsync(user);
-                var identity = new ClaimsIdentity(userDTO.claimsUserPrincipal.Claims);
-                var key = await _userManager.GenerateTwoFactorTokenAsync(user, "Default");
-                //await _signInManager.PasswordSignInAsync(user.UserName, authenticationAttemptDTO.Password, true, false);
-                //var result = await _userManager.GenerateTwoFactorTokenAsync(user, "2fa");
-                Console.WriteLine(key);
-                var result2 = await _userManager.ResetAuthenticatorKeyAsync(user);
-                var result = await _userManager.VerifyTwoFactorTokenAsync(user, "Default", key);
-                Console.WriteLine(result);
-
-                //generate JWT access token
-                var accessToken = GenerateJwtToken(userDTO.claimsUserPrincipal.Claims);
-
-                userDTO.JwtToken = accessToken;
-
-                //generate refresh token
-                var refreshToken = GenerateRefreshToken(userDTO.claimsUserPrincipal.Claims);
-
-                //hash refresh token
-                const int workFactor = 14;
-                string hashedRefreshToken = BC.HashPassword(refreshToken, workFactor);
-
-                //store refresh token in db
-                user.RefreshToken = hashedRefreshToken;
-                var updateResult = await _userManager.UpdateAsync(user);
-                var roles = await _userManager.GetRolesAsync(user);
-
-                if (updateResult.Succeeded)
+                var twoFAEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
+                if (twoFAEnabled)
                 {
-                    userDTO.Roles = roles;
-                    userDTO.RefreshToken = refreshToken;
-                    return userDTO;
+                    throw new TwoFactorEnabledException();
                 }
 
+                var userDto = await GenerateUserLogin(user);
 
+                return userDto;
 
 
             }
+            else
+            {
+                throw new UsernameOrPasswordIncorrectException();
+            }
 
+        }
+
+        public async Task<UserDTO> GenerateUserLogin(User user)
+        {
+            UserDTO userDTO = _mapper.Map<User, UserDTO>(user);
+
+
+            userDTO.TwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
+
+            userDTO.HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null;
+
+            //userDTO.TwoFactorClientRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user);
+
+            userDTO.claimsUserPrincipal = await _principalFactory.CreateAsync(user);
+
+            //generate JWT access token
+            var accessToken = GenerateJwtToken(userDTO.claimsUserPrincipal.Claims);
+
+            userDTO.JwtToken = accessToken;
+
+            //generate refresh token
+            var refreshToken = GenerateRefreshToken(userDTO.claimsUserPrincipal.Claims);
+
+            //hash refresh token
+            const int workFactor = 14;
+            string hashedRefreshToken = BC.HashPassword(refreshToken, workFactor);
+
+            //store refresh token in db
+            user.RefreshToken = hashedRefreshToken;
+            var updateResult = await _userManager.UpdateAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (updateResult.Succeeded)
+            {
+                userDTO.Roles = roles;
+                userDTO.RefreshToken = refreshToken;
+                return userDTO;
+            }
             return null;
-            
-
         }
 
         private string GenerateJwtToken(IEnumerable<Claim> claims)

@@ -47,7 +47,7 @@ namespace DoctorPatientAPI
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("https://10.10.2.149")
+                                      builder.WithOrigins("http://localhost:8081")
                                         .AllowAnyHeader()
                                         .AllowAnyMethod()
                                         .AllowCredentials();
@@ -152,11 +152,13 @@ namespace DoctorPatientAPI
 
             app.UseCors(MyAllowSpecificOrigins);
 
+
+
             app.UseMiddleware<GetJWTFromCookieMiddleware>();
             app.UseMiddleware<GetRefreshTokenFromCookieMiddleware>();
-
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseMiddleware<GetUserByIdProtectionMiddleware>();
             app.UseMiddleware<GetMedicalFileProtectionMiddleware>();
             app.UseIpRateLimiting();

@@ -37,6 +37,7 @@ namespace BusinessLogic.Startup
             services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IMedicalFileService, MedicalFileService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITwoFactorService, TwoFactorService>();
             services.AddScoped<IRoleService, RoleService>();
 
 
