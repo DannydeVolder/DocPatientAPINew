@@ -74,6 +74,7 @@ namespace DoctorPatientAPI.Controllers
                         tokens.RequestToken,
                         new CookieOptions()
                         {
+                            Expires = DateTime.Now.AddDays(3),
                             HttpOnly = false,
                             IsEssential = true
                         });
@@ -103,17 +104,14 @@ namespace DoctorPatientAPI.Controllers
             return BadRequest(ModelState);
         }
 
-
-        [AllowAnonymous]
         [IgnoreAntiforgeryToken]
+        [Authorize(AuthenticationSchemes = "RefreshToken")]
         [HttpPost("signout")]
-        public async Task<IActionResult> SignOut([Required]Guid userId)
+        public async Task<IActionResult> SignOut()
         {
-            Console.WriteLine("Hello");
-            Console.WriteLine(userId);
             if (ModelState.IsValid)
             {
-                var signedOut = await _authService.SignOut(userId);
+                var signedOut = await _authService.SignOut(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
 
                 if (signedOut)
                 {
@@ -185,9 +183,9 @@ namespace DoctorPatientAPI.Controllers
             return BadRequest(new { message = "Something went wrong." });
         }
 
-
+        [IgnoreAntiforgeryToken]
         [Authorize(AuthenticationSchemes = "RefreshToken")]
-        [HttpGet("refresh")]
+        [HttpPost("refresh")]
         public async Task<IActionResult> RefreshAccessToken()
         {
             var refreshCookieName = "REFRESH_TOKEN";
@@ -200,7 +198,7 @@ namespace DoctorPatientAPI.Controllers
                     user.JwtToken,
                     new CookieOptions
                     {
-                        Expires = DateTime.Now.AddMinutes(16),
+                        Expires = DateTime.Now.AddMinutes(15),
                         HttpOnly = true,
                     });
 
@@ -211,6 +209,7 @@ namespace DoctorPatientAPI.Controllers
                 return BadRequest(new { message = "Something went wrong while refreshing access token." });
             }
         }
+
 
 
     }

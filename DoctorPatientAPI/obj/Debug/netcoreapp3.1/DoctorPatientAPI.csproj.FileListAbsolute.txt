@@ -80,5 +80,9 @@ C:\Users\Danny\source\repos\DoctorPatientAPI\DoctorPatientAPI\bin\Debug\netcorea
 C:\Users\Danny\source\repos\DoctorPatientAPI\DoctorPatientAPI\bin\Debug\netcoreapp3.1\Microsoft.Extensions.FileProviders.Embedded.dll
 C:\Users\Danny\source\repos\DoctorPatientAPI\DoctorPatientAPI\bin\Debug\netcoreapp3.1\DoctorPatientAPI.StaticWebAssets.xml
 C:\Users\Danny\source\repos\DoctorPatientAPI\DoctorPatientAPI\bin\Debug\netcoreapp3.1\AspNetCoreRateLimit.dll
-C:\Users\Danny\source\repos\DoctorPatientAPI\DoctorPatientAPI\obj\Debug\netcoreapp3.1\DoctorPatientAPI.csproj.CoreCompileInputs.cache
-C:\Users\Danny\source\repos\DoctorPatientAPI\DoctorPatientAPI\obj\Debug\netcoreapp3.1\DoctorPatientAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Danny\source\repos\DoctorPatientAPi\DoctorPatientAPI\obj\Debug\netcoreapp3.1\DoctorPatientAPI.csproj.CoreCompileInputs.cache
+C:\Users\Danny\source\repos\DoctorPatientAPi\DoctorPatientAPI\obj\Debug\netcoreapp3.1\DoctorPatientAPI.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Danny\source\repos\DoctorPatientAPi\DoctorPatientAPI\obj\Debug\netcoreapp3.1\DoctorPatientAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Danny\source\repos\DoctorPatientAPI\DoctorPatientAPI\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Danny\source\repos\DoctorPatientAPI\DoctorPatientAPI\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\Danny\source\repos\DoctorPatientAPI\DoctorPatientAPI\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll

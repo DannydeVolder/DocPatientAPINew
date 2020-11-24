@@ -18,12 +18,17 @@ namespace DataAccessLayer.Repositories
             _entities = context.Set<T>();
         }
 
-        public void Delete(TPrimaryKey id)
+        public bool Delete(TPrimaryKey id)
         {
             if (id == null) throw new ArgumentNullException("entity");
             T entity = _entities.SingleOrDefault(s => Equals(s.Id, id));
+            if(entity == null)
+            {
+                return false;
+            }
             _entities.Remove(entity);
             _context.SaveChanges();
+            return true;
         }
 
         public async Task<IEnumerable<T>> GetAll()

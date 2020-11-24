@@ -39,6 +39,8 @@ namespace BusinessLogic.Startup
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITwoFactorService, TwoFactorService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IDoctorService, DoctorService>();
 
 
             builder.AddSignInManager<SignInManager<User>>();

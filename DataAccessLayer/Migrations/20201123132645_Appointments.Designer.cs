@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201025011908_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20201123132645_Appointments")]
+    partial class Appointments
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,6 +47,33 @@ namespace DataAccessLayer.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.Appointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AppointmentName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateAndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Models.Diagnosis", b =>
@@ -313,6 +340,17 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("DoctorId");
 
                     b.HasDiscriminator().HasValue("Patient");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.Appointment", b =>
+                {
+                    b.HasOne("DataAccessLayer.Models.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId");
+
+                    b.HasOne("DataAccessLayer.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Models.Diagnosis", b =>

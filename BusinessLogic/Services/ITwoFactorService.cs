@@ -12,8 +12,10 @@ namespace BusinessLogic.Services
         Task<AuthenticatorDetailsDTO> SetupAuthenticator(ClaimsPrincipal user);
         Task<ResultDTO> VerifyAuthenticator(string verificationCode, ClaimsPrincipal user);
 
-        Task<ResultDTO> TwoFactorLogin(AuthenticationAttemptDTO authenticationAttemptDTO, bool isRecovery);
+        Task<ResultDTO> TwoFactorLogin(TwoFactorAuthAttemptDTO twoFactorAuthAttemptDTO);
 
         Task<ResultDTO> Disable2FA(ClaimsPrincipal user);
+
+        Task<ResultDTO> GenerateRecoveryCodes(ClaimsPrincipal user);
     }
 }

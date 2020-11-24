@@ -23,6 +23,8 @@ namespace DataAccessLayer.Startup
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMedicalFileRepository, MedicalFileRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
             
 
         }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "eJGf2LYGLthb73a2RYtApuf9aHB95TVHuebZjPADSfU9gFqXt5keQfex7VJFWGI2i9t74x1tLRp0LxW9YtnJDg==",
+  "dgSpecHash": "tHF9Cb9sb5Sq8BrctnI1OdxFU4eT7y+9VElfMEtjvkI75Bh4po+jPerk6j+FkeD9CIK9sioOM0f08NCfoW02tw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
+  "projectFilePath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Danny\\.nuget\\packages\\aspnetcoreratelimit\\3.0.5\\aspnetcoreratelimit.3.0.5.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\automapper\\10.1.0\\automapper.10.1.0.nupkg.sha512",
@@ -33,6 +33,8 @@
     "C:\\Users\\Danny\\.nuget\\packages\\microsoft.aspnetcore.identity\\2.2.0\\microsoft.aspnetcore.identity.2.2.0.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\3.1.9\\microsoft.aspnetcore.identity.entityframeworkcore.3.1.9.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\3.1.9\\microsoft.aspnetcore.identity.ui.3.1.9.nupkg.sha512",
+    "C:\\Users\\Danny\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\3.1.10\\microsoft.aspnetcore.jsonpatch.3.1.10.nupkg.sha512",
+    "C:\\Users\\Danny\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\3.1.10\\microsoft.aspnetcore.mvc.newtonsoftjson.3.1.10.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\microsoft.aspnetcore.routing\\2.2.0\\microsoft.aspnetcore.routing.2.2.0.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\microsoft.aspnetcore.routing.abstractions\\2.2.0\\microsoft.aspnetcore.routing.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\microsoft.aspnetcore.server.iis\\2.2.0\\microsoft.aspnetcore.server.iis.2.2.0.nupkg.sha512",
@@ -96,6 +98,7 @@
     "C:\\Users\\Danny\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\microsoft.win32.registry\\4.5.0\\microsoft.win32.registry.4.5.0.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
+    "C:\\Users\\Danny\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",

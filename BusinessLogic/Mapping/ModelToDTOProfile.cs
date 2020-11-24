@@ -12,7 +12,10 @@ namespace BusinessLogic.Mapping
         public ModelToDTOProfile()
         {
             CreateMap<User, PatientDTO>();
-            CreateMap<User, UserDTO> ();
+            CreateMap<User, DoctorDTO>();
+            CreateMap<User, UserDTO>();
+            CreateMap<Doctor, DoctorDTO>();
+            CreateMap<Appointment, AppointmentDTO>();
         }
     }
 }

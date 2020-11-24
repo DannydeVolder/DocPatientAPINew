@@ -12,6 +12,6 @@ namespace DataAccessLayer.Repositories
         Task<T> GetById(TPrimaryKey id);
         Task<int> Insert(T entity);
         void Update(T entity);
-        void Delete(TPrimaryKey id);
+        bool Delete(TPrimaryKey id);
     }
 }

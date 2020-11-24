@@ -17,12 +17,5 @@ namespace BusinessLogic.DTO
         ErrorMessage = "Password should be minimum 8 characters and a maximum of 200 characters")]
         public string Password { get; set; }
 
-        [StringLength(6, MinimumLength = 6,
-        ErrorMessage = "2FA Code should be 6 characters.")]
-        public string TwoFactorCode { get; set; }
-
-        [StringLength(8, MinimumLength = 8,
-        ErrorMessage = "2FA Recovery code should be 8 characters.")]
-        public string RecoveryCode { get; set; }
     }
 }

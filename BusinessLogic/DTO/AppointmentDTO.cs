@@ -7,8 +7,10 @@ namespace BusinessLogic.DTO
 {
     public class AppointmentDTO
     {
-        public string Id { get; set; }
-        public string DoctorName { get; set; }
-        public DateTime DateAndTime { get; set; }
+        public Guid Id { get; set; }
+        public DoctorDTO doctor { get; set; }
+        public DateTime Date { get; set; }
+        public string Time { get; set; }
+        public string AppointmentName { get; set; }
     }
 }

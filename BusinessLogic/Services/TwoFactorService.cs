@@ -148,21 +148,21 @@ namespace BusinessLogic.Services
 
         }
 
-        public async Task<ResultDTO> TwoFactorLogin(AuthenticationAttemptDTO authenticationAttemptDTO, bool isRecovery)
+        public async Task<ResultDTO> TwoFactorLogin(TwoFactorAuthAttemptDTO twoFactorAuthAttemptDTO)
         {
-            var user = await _userManager.FindByNameAsync(authenticationAttemptDTO.Username);
+            var user = await _userManager.FindByNameAsync(twoFactorAuthAttemptDTO.Username);
 
             if(user != null)
             {
-                var loginResult = await _signInManager.CheckPasswordSignInAsync(user, authenticationAttemptDTO.Password, false);
+                var loginResult = await _signInManager.CheckPasswordSignInAsync(user, twoFactorAuthAttemptDTO.Password, false);
                 if (!loginResult.Succeeded)
                 {
                     throw new UsernameOrPasswordIncorrectException();
                 }
 
-                if (isRecovery)
+                if (twoFactorAuthAttemptDTO.IsRecovery)
                 {
-                    var redeemed = await TwoFactorRecoverySignIn(user, authenticationAttemptDTO.RecoveryCode);
+                    var redeemed = await TwoFactorRecoverySignIn(user, twoFactorAuthAttemptDTO.RecoveryCode);
                     if (redeemed)
                     {
                         ResultDTO result = new ResultDTO();
@@ -181,9 +181,9 @@ namespace BusinessLogic.Services
                     
                 }
 
-                if (!isRecovery)
+                if (!twoFactorAuthAttemptDTO.IsRecovery)
                 {
-                    var validated = await TwoFactorAuthenticatorSignIn(user, authenticationAttemptDTO.TwoFactorCode);
+                    var validated = await TwoFactorAuthenticatorSignIn(user, twoFactorAuthAttemptDTO.TwoFactorCode);
                     if (validated)
                     {
                         ResultDTO result = new ResultDTO();
@@ -247,6 +247,31 @@ namespace BusinessLogic.Services
                 Status = result.Succeeded ? Status.Success : Status.Error,
                 Message = result.Succeeded ? "2FA has been successfully disabled" : $"Failed to disable 2FA {result.Errors.FirstOrDefault()?.Description}",
                 Data = result.Succeeded ? await _authService.GenerateUserLogin(userResult) : null,
+            };
+        }
+
+        public async Task<ResultDTO> GenerateRecoveryCodes(ClaimsPrincipal user)
+        {
+            var userResult = await _userManager.GetUserAsync(user);
+
+            var twoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(userResult);
+
+            if (!twoFactorEnabled)
+            {
+                return new ResultDTO
+                {
+                    Status = Status.Error,
+                    Message = "You do not have two-factor authentication enabled. Please enable it first."
+                };
+            }
+
+            var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(userResult, 10);
+
+            return new ResultDTO
+            {
+                Status = Status.Success,
+                Message = "New recovery codes generated!",
+                Data = recoveryCodes
             };
         }
     }

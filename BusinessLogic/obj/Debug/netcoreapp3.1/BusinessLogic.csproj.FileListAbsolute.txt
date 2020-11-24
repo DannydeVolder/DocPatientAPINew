@@ -9,4 +9,4 @@ C:\Users\Danny\source\repos\DoctorPatientAPI\BusinessLogic\bin\Debug\netcoreapp3
 C:\Users\Danny\source\repos\DoctorPatientAPI\BusinessLogic\obj\Debug\netcoreapp3.1\BusinessLogic.csproj.CopyComplete
 C:\Users\Danny\source\repos\DoctorPatientAPI\BusinessLogic\obj\Debug\netcoreapp3.1\BusinessLogic.dll
 C:\Users\Danny\source\repos\DoctorPatientAPI\BusinessLogic\obj\Debug\netcoreapp3.1\BusinessLogic.pdb
-C:\Users\Danny\source\repos\DoctorPatientAPI\BusinessLogic\obj\Debug\netcoreapp3.1\BusinessLogic.csproj.CoreCompileInputs.cache
+C:\Users\Danny\source\repos\DoctorPatientAPi\BusinessLogic\obj\Debug\netcoreapp3.1\BusinessLogic.csproj.CoreCompileInputs.cache

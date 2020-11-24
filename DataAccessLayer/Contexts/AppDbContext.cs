@@ -32,6 +32,8 @@ namespace DataAccessLayer.Contexts
 
         public DbSet<Diagnosis> Diagnosis { get; set; }
 
+        public DbSet<Appointment> Appointments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
@@ -50,16 +52,19 @@ namespace DataAccessLayer.Contexts
                 .HasForeignKey(p => p.MedicalFileID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<MedicalFile>()
-                .HasMany(p => p.Diagnosis)
-                .WithOne(p => p.MedicalFile)
+            builder.Entity<Diagnosis>()
+                .HasOne(p => p.MedicalFile)
+                .WithMany(p => p.Diagnosis)
                 .HasForeignKey(p => p.MedicalFileID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+
 
             builder.Entity<User>().ToTable("Users");
             builder.Entity<MedicalFile>().ToTable("MedicalFiles");
             builder.Entity<Medicine>().ToTable("Medicine");
             builder.Entity<Diagnosis>().ToTable("Diagnosis");
+            builder.Entity<Appointment>().ToTable("Appointments");
 
 
 

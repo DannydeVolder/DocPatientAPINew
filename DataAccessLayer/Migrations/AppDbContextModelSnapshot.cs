@@ -47,6 +47,36 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Models.Appointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AppointmentName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Time")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Appointments");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Models.Diagnosis", b =>
                 {
                     b.Property<Guid>("Id")
@@ -311,6 +341,17 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("DoctorId");
 
                     b.HasDiscriminator().HasValue("Patient");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Models.Appointment", b =>
+                {
+                    b.HasOne("DataAccessLayer.Models.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId");
+
+                    b.HasOne("DataAccessLayer.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Models.Diagnosis", b =>

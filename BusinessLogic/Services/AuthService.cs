@@ -210,8 +210,8 @@ namespace BusinessLogic.Services
 
         public async Task<bool> SignOut(Guid userId)
         {
+            Console.WriteLine(userId);
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            Console.WriteLine(user);
             if (user != null)
             {
                 user.RefreshToken = null;

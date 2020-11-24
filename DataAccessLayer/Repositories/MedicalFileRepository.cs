@@ -17,7 +17,7 @@ namespace DataAccessLayer.Repositories
 
         public async Task<MedicalFile> addDiagnosisToMedicalFile(Guid medicalFileID, Diagnosis diagnosis)
         {
-            var medicalFile = await _context.MedicalFiles.SingleOrDefaultAsync(x => x.Id == medicalFileID);
+            var medicalFile = await _context.MedicalFiles.SingleOrDefaultAsync(x => x.PatientId == medicalFileID);
             medicalFile.Diagnosis.Add(diagnosis);
             var result = await _context.SaveChangesAsync();
 
@@ -32,12 +32,10 @@ namespace DataAccessLayer.Repositories
         public async Task<MedicalFile> addMedicineToMedicalFile(Guid medicalFileID, Medicine medicine)
         {
             var medicalFile = await _context.MedicalFiles.SingleOrDefaultAsync(x => x.PatientId == medicalFileID);
-            Console.WriteLine(medicalFile.PatientId);
             medicalFile.Medicine.Add(medicine);
             var result = await _context.SaveChangesAsync();
             if(result > 0)
             {
-                Console.WriteLine(result);
                 return medicalFile;
             }
             return null;

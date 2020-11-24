@@ -9,5 +9,6 @@ namespace DataAccessLayer.Models
     {
 
         public IList<Patient> Patients { get; set; } = new List<Patient>();
+
     }
 }

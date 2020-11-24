@@ -49,7 +49,21 @@ namespace DoctorPatientAPI.Controllers
             
         }
 
-        [IgnoreAntiforgeryToken]
+        [HttpPost("generaterecoverycodes")]
+        [Authorize(AuthenticationSchemes = "AccessToken")]
+        public async Task<IActionResult> GenerateRecoveryCodes()
+        {
+            var result = await _twoFactorService.GenerateRecoveryCodes(User);
+            if(result.Status == Status.Success)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
+
         [HttpPost("verifyauthenticator")]
         [Authorize(AuthenticationSchemes = "AccessToken")]
         public async Task<IActionResult> VerifyAuthenticator(VerifyAuthenticatorDTO verifyAuthenticatorDTO)
@@ -73,13 +87,13 @@ namespace DoctorPatientAPI.Controllers
         [AllowAnonymous]
         [IgnoreAntiforgeryToken]
         [HttpPost("twofactorlogin")]
-        public async Task<IActionResult> TwoFactorLogin(AuthenticationAttemptDTO authenticationAttemptDTO)
+        public async Task<IActionResult> TwoFactorLogin(TwoFactorAuthAttemptDTO twoFactorAuthAttemptDTO)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var result = await _twoFactorService.TwoFactorLogin(authenticationAttemptDTO, false);
+                    var result = await _twoFactorService.TwoFactorLogin(twoFactorAuthAttemptDTO);
                     
                     if(result.Status == Status.Error)
                     {
@@ -138,13 +152,13 @@ namespace DoctorPatientAPI.Controllers
         [AllowAnonymous]
         [IgnoreAntiforgeryToken]
         [HttpPost("twofactorrecoverylogin")]
-        public async Task<IActionResult> TwoFactorRecoveryLogin(AuthenticationAttemptDTO authenticationAttemptDTO)
+        public async Task<IActionResult> TwoFactorRecoveryLogin(TwoFactorAuthAttemptDTO twoFactorAuthAttemptDTO)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var result = await _twoFactorService.TwoFactorLogin(authenticationAttemptDTO, true);
+                    var result = await _twoFactorService.TwoFactorLogin(twoFactorAuthAttemptDTO);
 
                     if (result.Status == Status.Error)
                     {
