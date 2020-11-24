@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "sXo4iYxuqNHOqjPjW51kF65hVJfK5I2FAG1xaNfEXETY/7qH8Cj9v/JxZQCO9H72oqf2dbZCt3W8/bT3oFOHrA==",
+  "dgSpecHash": "QlLwmLK3F72JtGBkJ7hFv7RMS251ftoNceBDuX5esuPhRRPhMPOxRC5Jcb7DsHsJDho6Gy87KvE0GqDLssPeYQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj",
+  "projectFilePath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Danny\\.nuget\\packages\\automapper\\10.1.0\\automapper.10.1.0.nupkg.sha512",
     "C:\\Users\\Danny\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\8.1.0\\automapper.extensions.microsoft.dependencyinjection.8.1.0.nupkg.sha512",

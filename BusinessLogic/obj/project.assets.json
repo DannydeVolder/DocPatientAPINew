@@ -1917,7 +1917,10 @@
         },
         "runtime": {
           "bin/placeholder/DataAccessLayer.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -6572,11 +6575,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj",
+      "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj",
       "projectName": "BusinessLogic",
-      "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj",
+      "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj",
       "packagesPath": "C:\\Users\\Danny\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\obj\\",
+      "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Danny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -6592,8 +6595,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj": {
-              "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj"
+            "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj": {
+              "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj"
             }
           }
         }
@@ -6655,6 +6658,9 @@
         "assetTargetFallback": true,
         "warn": true,
         "frameworkReferences": {
+          "Microsoft.AspNetCore.App": {
+            "privateAssets": "none"
+          },
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
