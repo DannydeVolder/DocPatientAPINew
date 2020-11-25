@@ -46,18 +46,6 @@ namespace DataAccessLayer.Contexts
                 .HasForeignKey(p => p.DoctorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Medicine>()
-                .HasOne(p => p.MedicalFile)
-                .WithMany(p => p.Medicine)
-                .HasForeignKey(p => p.MedicalFileID)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Diagnosis>()
-                .HasOne(p => p.MedicalFile)
-                .WithMany(p => p.Diagnosis)
-                .HasForeignKey(p => p.MedicalFileID)
-                .OnDelete(DeleteBehavior.Restrict);
-
 
 
             builder.Entity<User>().ToTable("Users");

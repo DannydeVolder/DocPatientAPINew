@@ -12,8 +12,6 @@ namespace DataAccessLayer.Models
         public string DiagnosisName { get; set; }
         public string DiagnosisInformation { get; set; }
 
-        [JsonIgnore]
-        public MedicalFile MedicalFile { get; set; }
         public Guid? MedicalFileID { get; set; }
     }
 }

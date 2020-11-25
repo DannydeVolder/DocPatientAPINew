@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DoctorPatientAPI\\DoctorPatientAPI.csproj": {}
+    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DoctorPatientAPI\\DoctorPatientAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj": {
+    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj",
+        "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj",
         "projectName": "BusinessLogic",
-        "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj",
+        "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj",
         "packagesPath": "C:\\Users\\Danny\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\obj\\",
+        "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Danny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -27,8 +27,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj": {
-                "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj"
+              "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj": {
+                "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj"
               }
             }
           }
@@ -90,9 +90,6 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
@@ -101,14 +98,14 @@
         }
       }
     },
-    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj": {
+    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj",
+        "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj",
         "projectName": "DataAccessLayer",
-        "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj",
+        "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj",
         "packagesPath": "C:\\Users\\Danny\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\obj\\",
+        "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Danny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -181,9 +178,6 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
@@ -192,14 +186,14 @@
         }
       }
     },
-    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DoctorPatientAPI\\DoctorPatientAPI.csproj": {
+    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DoctorPatientAPI\\DoctorPatientAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
         "projectName": "DoctorPatientAPI",
-        "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
+        "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
         "packagesPath": "C:\\Users\\Danny\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DoctorPatientAPI\\obj\\",
+        "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DoctorPatientAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Danny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -215,8 +209,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj": {
-                "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj"
+              "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj": {
+                "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj"
               }
             }
           }

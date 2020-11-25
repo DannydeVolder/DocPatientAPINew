@@ -40,8 +40,8 @@ namespace BusinessLogic.Services
 
         public async Task<MedicalFile> GetMedicalFileByPatientId(Guid patientId)
         {
-            MedicalFile m = await _medicalFileRepository.getMedicalFileByPatientId(patientId);
-            return m;
+            var medicalFile = await _medicalFileRepository.getMedicalFileByPatientId(patientId);
+            return medicalFile;
         }
     }
 }

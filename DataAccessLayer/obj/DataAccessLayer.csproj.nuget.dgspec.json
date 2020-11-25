@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj": {}
+    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj": {
+    "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj",
+        "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj",
         "projectName": "DataAccessLayer",
-        "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\DataAccessLayer.csproj",
+        "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\DataAccessLayer.csproj",
         "packagesPath": "C:\\Users\\Danny\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DataAccessLayer\\obj\\",
+        "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DataAccessLayer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Danny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -84,9 +84,6 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }

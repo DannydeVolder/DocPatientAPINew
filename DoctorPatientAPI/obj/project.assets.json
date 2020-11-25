@@ -2407,10 +2407,7 @@
         },
         "runtime": {
           "bin/placeholder/BusinessLogic.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
+        }
       },
       "DataAccessLayer/1.0.0": {
         "type": "project",
@@ -2430,10 +2427,7 @@
         },
         "runtime": {
           "bin/placeholder/DataAccessLayer.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
+        }
       }
     }
   },
@@ -7614,11 +7608,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
       "projectName": "DoctorPatientAPI",
-      "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
+      "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DoctorPatientAPI\\DoctorPatientAPI.csproj",
       "packagesPath": "C:\\Users\\Danny\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\DoctorPatientAPI\\obj\\",
+      "outputPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\DoctorPatientAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Danny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -7634,8 +7628,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj": {
-              "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPI\\BusinessLogic\\BusinessLogic.csproj"
+            "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj": {
+              "projectPath": "C:\\Users\\Danny\\source\\repos\\DoctorPatientAPi\\BusinessLogic\\BusinessLogic.csproj"
             }
           }
         }
