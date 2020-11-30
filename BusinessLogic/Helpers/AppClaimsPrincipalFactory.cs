@@ -18,7 +18,7 @@ namespace BusinessLogic.Helpers
             ILogger<AppClaimsPrincipalFactory> logger)
             : base(userManager, roleManager, optionsAccessor)
         {
-            logger.LogInformation("AppClaimsPrincipalFactory ctor");
+
         }
 
         public override async Task<ClaimsPrincipal> CreateAsync(User user)

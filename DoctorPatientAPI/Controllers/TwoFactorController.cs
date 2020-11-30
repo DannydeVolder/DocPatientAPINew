@@ -5,11 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessLogic.DTO;
 using BusinessLogic.Exceptions;
+using BusinessLogic.Helpers;
 using BusinessLogic.Services;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NETCore.Encrypt;
 
 namespace DoctorPatientAPI.Controllers
 {
@@ -47,6 +49,17 @@ namespace DoctorPatientAPI.Controllers
             }
             return BadRequest(result);
             
+        }
+
+        [HttpGet("aeskey")]
+        public IActionResult AesKey()
+        {
+
+            var result = Crypto.AesEncrypt("kankervettqewrwerew333333333333333333333333333333333333333333333333333r", "UDW8Uj24kCseiEc2RrEH2sZ3jl4A40W9");
+
+            var decrypted = Crypto.AesDecrypt(result, "UDW8Uj24kCseiEc2RrEH2sZ3jl4A40W9");
+
+            return Ok(decrypted);
         }
 
         [HttpPost("generaterecoverycodes")]
