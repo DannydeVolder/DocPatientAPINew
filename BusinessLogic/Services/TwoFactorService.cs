@@ -173,6 +173,7 @@ namespace BusinessLogic.Services
                     }
                     else
                     {
+                        Console.WriteLine("here0");
                         ResultDTO result = new ResultDTO();
                         result.Status = Status.Error;
                         result.Message = "Recovery code has already been redeemed or is not valid.";
@@ -202,7 +203,7 @@ namespace BusinessLogic.Services
                 }
 
             }
-
+            Console.WriteLine("wrong");
             ResultDTO resultDTO = new ResultDTO();
             resultDTO.Status = Status.Error;
             resultDTO.Message = "Something went wrong.";

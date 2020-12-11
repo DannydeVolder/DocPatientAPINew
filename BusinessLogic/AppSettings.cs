@@ -12,5 +12,7 @@ namespace BusinessLogic
         public string ClaimsUser { get; set; }
         public int AccessTokenLifetime { get; set; }
         public int RefreshTokenLifetime { get; set; }
+        public string EncryptionKey { get; set; }
+        public bool EncryptionEnabled { get; set; }
     }
 }

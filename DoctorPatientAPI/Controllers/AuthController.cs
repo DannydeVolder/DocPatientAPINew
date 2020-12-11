@@ -96,10 +96,6 @@ namespace DoctorPatientAPI.Controllers
                 {
                     return BadRequest(new { message = "Username or password is incorrect." });
                 }
-                catch(Exception ex)
-                {
-                    return BadRequest(new { message = "Something went wrong." });
-                }
             }
             return BadRequest(ModelState);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BusinessLogic.DTO;
 using BusinessLogic.Exceptions;
@@ -57,6 +58,8 @@ namespace DoctorPatientAPI.Controllers
 
             var result = Crypto.AesEncrypt("kankervettqewrwerew333333333333333333333333333333333333333333333333333r", "UDW8Uj24kCseiEc2RrEH2sZ3jl4A40W9");
 
+            string S = Encoding.UTF8.GetString(result);
+            Console.WriteLine(S);
             var decrypted = Crypto.AesDecrypt(result, "UDW8Uj24kCseiEc2RrEH2sZ3jl4A40W9");
 
             return Ok(decrypted);

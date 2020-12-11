@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DataAccessLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -10,107 +11,66 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Helpers
 {
-    public class AppUserManager
+    public class AppUserManager : UserManager<User>
     {
-        //private readonly IConfiguration _configuration;
+        private IConfiguration _configuration { get; }
+        private readonly IConfigurationSection _appSettingsSection;
+        private readonly AppSettings _appSettings;
 
-        //public AppUserManager(IUserStore<IdentityUser> store, IOptions<IdentityOptions> optionsAccessor,
-        //    IPasswordHasher<IdentityUser> passwordHasher, IEnumerable<IUserValidator<IdentityUser>> userValidators,
-        //    IEnumerable<IPasswordValidator<IdentityUser>> passwordValidators, ILookupNormalizer keyNormalizer,
-        //    IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<IdentityUser>> logger,
-        //    IConfiguration configuration)
-        //    : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators,
-        //        keyNormalizer, errors, services, logger)
-        //{
-        //    _configuration = configuration;
-        //}
+        public AppUserManager(IUserStore<User> store, IOptions<IdentityOptions> optionsAccessor,
+            IPasswordHasher<User> passwordHasher, IEnumerable<IUserValidator<User>> userValidators,
+            IEnumerable<IPasswordValidator<User>> passwordValidators, ILookupNormalizer keyNormalizer,
+            IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<User>> logger,
+            IConfiguration configuration)
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators,
+                keyNormalizer, errors, services, logger)
+        {
+            _configuration = configuration;
+            _appSettingsSection = _configuration.GetSection("AppSettings");
+            _appSettings = _appSettingsSection.Get<AppSettings>();
+        }
 
-        //#region Authenticator App key
+        #region Authenticator App key
 
-        //public override string GenerateNewAuthenticatorKey()
-        //{
-        //    var originalAuthenticatorKey = base.GenerateNewAuthenticatorKey();
+        public override string GenerateNewAuthenticatorKey()
+        {
+            var originalAuthenticatorKey = base.GenerateNewAuthenticatorKey();
 
-        //    // var aesKey = EncryptProvider.CreateAesKey();
+            // var aesKey = EncryptProvider.CreateAesKey();
 
-        //    bool.TryParse(_configuration["TwoFactorAuthentication:EncryptionEnabled"], out bool encryptionEnabled);
+            bool encryptionEnabled = _appSettings.EncryptionEnabled;
 
-        //    var encryptedKey = encryptionEnabled
-        //        ? Crypto.AesEncrypt(originalAuthenticatorKey, _configuration["TwoFactorAuthentication:EncryptionKey"])
-        //        : originalAuthenticatorKey;
+            Console.WriteLine(encryptionEnabled);
 
-        //    return encryptedKey;
-        //}
 
-        //public override async Task<string> GetAuthenticatorKeyAsync(IdentityUser user)
-        //{
-        //    var databaseKey = await base.GetAuthenticatorKeyAsync(user);
+            var encryptedKey = encryptionEnabled
+                ? Convert.ToBase64String(Crypto.AesEncrypt(originalAuthenticatorKey, _appSettings.EncryptionKey))
+                : originalAuthenticatorKey;
 
-        //    if (databaseKey == null)
-        //    {
-        //        return null;
-        //    }
+            Console.WriteLine(encryptedKey);
 
-        //    // Decryption
-        //    bool.TryParse(_configuration["TwoFactorAuthentication:EncryptionEnabled"], out bool encryptionEnabled);
+            return encryptedKey;
+        }
 
-        //    var originalAuthenticatorKey = encryptionEnabled
-        //        ? Crypto.AesDecrypt(databaseKey, _configuration["TwoFactorAuthentication:EncryptionKey"])
-        //        : databaseKey;
+        public override async Task<string> GetAuthenticatorKeyAsync(User user)
+        {
+            var dbKey = await base.GetAuthenticatorKeyAsync(user);
 
-        //    return originalAuthenticatorKey;
-        //}
+            if (dbKey == null)
+            {
+                return null;
+            }
+            // Decryption
+            bool encryptionEnabled = _appSettings.EncryptionEnabled;
 
-        //#endregion
+            var originalAuthenticatorKey = encryptionEnabled
+                ? Crypto.AesDecrypt(Convert.FromBase64String(dbKey), _appSettings.EncryptionKey)
+                : await base.GetAuthenticatorKeyAsync(user);
 
-        //#region Recovery codes
+            return originalAuthenticatorKey;
+        }
 
-        //protected override string CreateTwoFactorRecoveryCode()
-        //{
-        //    var originalRecoveryCode = base.CreateTwoFactorRecoveryCode();
-
-        //    bool.TryParse(_configuration["TwoFactorAuthentication:EncryptionEnabled"], out bool encryptionEnabled);
-
-        //    var encryptedRecoveryCode = encryptionEnabled
-        //        ? Crypto.AesEncrypt(originalRecoveryCode, _configuration["TwoFactorAuthentication:EncryptionKey"])
-        //        : originalRecoveryCode;
-
-        //    return encryptedRecoveryCode;
-        //}
-
-        //public override async Task<IEnumerable<string>> GenerateNewTwoFactorRecoveryCodesAsync(IdentityUser user, int number)
-        //{
-        //    var tokens = await base.GenerateNewTwoFactorRecoveryCodesAsync(user, number);
-
-        //    var generatedTokens = tokens as string[] ?? tokens.ToArray();
-        //    if (!generatedTokens.Any())
-        //    {
-        //        return generatedTokens;
-        //    }
-
-        //    bool.TryParse(_configuration["TwoFactorAuthentication:EncryptionEnabled"], out bool encryptionEnabled);
-
-        //    return encryptionEnabled
-        //        ? generatedTokens
-        //            .Select(token =>
-        //                Crypto.AesDecrypt(token, _configuration["TwoFactorAuthentication:EncryptionKey"]))
-        //        : generatedTokens;
-
-        //}
-
-        //public override Task<IdentityResult> RedeemTwoFactorRecoveryCodeAsync(IdentityUser user, string code)
-        //{
-        //    bool.TryParse(_configuration["TwoFactorAuthentication:EncryptionEnabled"], out bool encryptionEnabled);
-
-        //    if (encryptionEnabled && !string.IsNullOrEmpty(code))
-        //    {
-        //        code = Crypto.AesEncrypt(code, _configuration["TwoFactorAuthentication:EncryptionKey"]);
-        //    }
-
-        //    return base.RedeemTwoFactorRecoveryCodeAsync(user, code);
-        //}
-
-        //#endregion
+        #endregion
 
     }
 }

@@ -18,7 +18,7 @@ namespace BusinessLogic.Helpers
 
         public static byte[] AesEncrypt(string message, string key)
         {
-            byte[] keyBytes = Encoding.ASCII.GetBytes(key);
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
             Aes aesObj = Aes.Create();
 
             aesObj.KeySize = 128;
@@ -46,7 +46,6 @@ namespace BusinessLogic.Helpers
             }
 
             byte[] finalCipher = aesObj.IV.Concat(cipher).ToArray();
-            Console.WriteLine(finalCipher.Length);
             return finalCipher;
         }
 
@@ -55,7 +54,7 @@ namespace BusinessLogic.Helpers
 
             string plaintext = null;
 
-            byte[] keyBytes = Encoding.ASCII.GetBytes(key);
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
             Aes aesObj = Aes.Create();
 
             aesObj.KeySize = 128;
